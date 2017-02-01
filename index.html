@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Socket</title>
+    </head>
+
+    <body>
+        <div id="root">
+        <h1>Chat Lesson</h1>
+
+        <form v-on:submit="send">
+            <div>
+            {{ msg }}
+            </div>
+            <input v-model="data">
+            <button>Send</button>
+        </form>
+
+        <ul>
+            <li v-for="message in messages"> {{ message }} </li>
+        </ul>
+
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.2/socket.io.min.js"></script>
+
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.10/vue.min.js"></script>
+
+        <script type="text/javascript">
+                var socket = io();
+
+                 new Vue({
+                  el: '#root',
+                      data: {
+                        msg: 'Hello Vue!',
+                            data: '',
+                            messages : []
+                      },
+                    created : function() {
+
+                            socket.on('chat.message',function(message){
+                            this.messages.push(message);
+                            console.log(message);
+
+                    }.bind(this));
+
+                    },
+                    methods : {
+                            send : function (e) {
+                    socket.emit('chat.message',this.data);
+                        this.data = '';
+                        e.preventDefault();
+                        }
+                    }
+                })
+
+        </script>
+        </div>
+    </body>
+</html>
